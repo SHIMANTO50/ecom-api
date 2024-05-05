@@ -74,4 +74,26 @@ class CartController extends Controller
             'data' => $cartItems,
         ]);
     }
+
+    public function destroy(Request $request, $id)
+    {
+        // Retrieve session ID from the request headers
+        $sessionId = $request->header('X-Session-ID');
+
+        // Delete the cart item based on the provided session ID and item ID
+        $deleted = DB::table('carts')
+                    ->where('session_id', $sessionId)
+                    ->where('id', $id)
+                    ->delete();
+
+        if ($deleted) {
+            return response()->json([
+                'message' => 'Cart item deleted successfully',
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Cart item not found or could not be deleted',
+            ], 404);
+        }
+    }
 }

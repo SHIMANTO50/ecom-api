@@ -26,3 +26,4 @@ Route::get('/item/show/{id}',[ItemController::class,'show']);
 Route::post('/product/store',[ProductController::class,'store']);
 Route::post('/cart/store',[CartController::class,'store']);
 Route::get('/cart/show',[CartController::class,'show']);
+Route::post('/cart/{id}',[CartController::class,'destroy']);
