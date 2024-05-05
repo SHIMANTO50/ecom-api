@@ -8,6 +8,7 @@ use App\Models\Item;
 use App\Models\Product;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
@@ -56,6 +57,21 @@ class CartController extends Controller
         return response()->json([
             'message' => 'Item added to cart successfully',
             'data' => $cartItem,
+        ]);
+    }
+
+    public function show(Request $request)
+    {
+        // Retrieve session ID from the request headers
+        $sessionId = $request->header('X-Session-ID');
+
+        // Get cart items along with their associated products for the given session ID
+        //$cartItems = Cart::with('products')->where('session_id', $sessionId)->get();
+        $cartItems = DB::table('carts')->join('products', 'carts.product_id', '=', 'products.id')->select('carts.*', 'products.name', 'products.price')->where('carts.session_id',$sessionId)->get();
+
+        return response()->json([
+            'message' => 'Cart items retrieved successfully',
+            'data' => $cartItems,
         ]);
     }
 }
